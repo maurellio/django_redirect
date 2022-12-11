@@ -14,7 +14,7 @@ def signup(request):
 
         #print(form.errors)
         if form.is_valid():
-            print(form.data)
+            #print(form.data)
             user = form.save()
             login(request, user)
             return redirect('index')
