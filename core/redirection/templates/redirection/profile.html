@@ -11,9 +11,8 @@
         <h3 class="text-end" style="text-align:right;">{{ link.counter }}</h3>
         <p style="text-align:left"><a href="http://127.0.0.1:8000/link/{{link.slug}}">http://127.0.0.1:8000/link/{{link.slug}}</a></p>
     </div>
-
-    <div class="col-md-6" style="">
-        <button type="submit" class="btn btn-warning mb-2" >Delete</button>
+    <div class="col-md-6">
+        <a class="btn btn-warning mb-2"  style="width: 75px; text-align:left;" href="{% url 'delete_link' link.slug %}">Delete</a>
     </div>
 
     {% endfor %}

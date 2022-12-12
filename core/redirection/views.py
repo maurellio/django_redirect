@@ -42,7 +42,6 @@ def signin(request):
         return render(request, 'redirection/signin.html', {'errors': 0})
 
 def redirector(request, slug):
-    #print(dir(request))
     link = Links.objects.get(slug=slug)
     link.counter = link.counter + 1
     link.save()
@@ -72,3 +71,8 @@ def create_link(request):
 def logout_view(request):
     logout(request)
     return redirect('index')
+
+@login_required
+def delete_link(request, slug):
+    Links.objects.get(slug=slug).delete()
+    return redirect('profile')
