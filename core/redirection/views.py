@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate
 from .forms import SignUpForm
-
+from django.contrib.auth.decorators import login_required
+from .models import Links
+from django.http import HttpResponseRedirect
 
 # Create your views here.
 
@@ -29,14 +31,24 @@ def signin(request):
         email = request.POST['email']
         password = request.POST['password']
 
-        user = authenticate(request, email=email, password=password)
+        user = authenticate(request, username=email, password=password)
         if user is not None:
-            print('kek')
             login(request, user)
             return redirect('index')
         else:
-            print('notkek')
             return render(request, 'redirection/signin.html', {'errors': 1})
     else:
-        print('notkek2')
         return render(request, 'redirection/signin.html', {'errors': 0})
+
+def redirector(request, slug):
+    #print(dir(request))
+    link = Links.objects.get(slug=slug)
+    link.counter = link.counter + 1
+    link.save()
+    return HttpResponseRedirect(link.url_link)
+
+@login_required
+def profile(request):
+    links = Links.objects.filter(user=request.user)
+
+    return render(request, 'redirection/profile.html', {'links' : links})
