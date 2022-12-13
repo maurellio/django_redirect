@@ -1,7 +1,7 @@
 # django_redirect
 
 <h3>What is about?</h3>
-It's a small web app that provides link shortner service.
+It's a small web app that provides link shortener service.
 
 <h3>Functions</h3>
 + Authorization and authentication
