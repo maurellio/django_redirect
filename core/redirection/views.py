@@ -9,7 +9,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from .forms import SignUpForm, CreateLink
 from django.contrib.auth.decorators import login_required
-from .models import Links, API_token
+from .models import Links, API_token, User
 from django.http import HttpResponseRedirect, JsonResponse
 from django.contrib.auth import logout
 from .serializers import LinksSerializer
@@ -104,13 +104,13 @@ def links_api(request):
     if request.method == 'POST':
         serializer = LinksSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 @api_view(['GET', 'PUT', 'DELETE'])
 def detail_links_api(request, slug):
     try:
-        link = LinksSerializer(pk=slug)
+        link = Links.objects.get(slug=slug)
     except Links.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
