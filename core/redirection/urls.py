@@ -11,4 +11,7 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout'),
     path('profile/', views.profile, name='profile'),
     path('profile/create/', views.create_link, name='create'),
+    path('profile/gettoken/', views.create_token),
+    path('api/v1/links/', views.links_api),
+    path('api/v1/links/<str:slug>', views.detail_links_api)
 ]

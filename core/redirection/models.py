@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils.text import slugify
 from time import time
+from rest_framework.authtoken.models import Token
 
 host_url = 'http://127.0.0.1:8000/'
 
@@ -11,6 +12,10 @@ def gen_slug(s):
 
 def gen_link(s):
     return host_url + 'link/' + s
+
+class API_token(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    token = models.CharField(max_length=300, blank=True)
 
 class Links(models.Model):
     date_creation = models.DateTimeField(auto_now_add=True)

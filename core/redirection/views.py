@@ -1,11 +1,20 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate
+from rest_framework import status
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.response import Response
+
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
+
 from .forms import SignUpForm, CreateLink
 from django.contrib.auth.decorators import login_required
-from .models import Links
-from django.http import HttpResponseRedirect
+from .models import Links, API_token
+from django.http import HttpResponseRedirect, JsonResponse
 from django.contrib.auth import logout
+from .serializers import LinksSerializer
 
+from rest_framework.authtoken.models import Token
 # Create your views here.
 
 def index(request):
@@ -15,9 +24,7 @@ def signup(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
 
-        #print(form.errors)
         if form.is_valid():
-            #print(form.data)
             user = form.save()
             login(request, user)
             return redirect('index')
@@ -76,3 +83,42 @@ def logout_view(request):
 def delete_link(request, slug):
     Links.objects.get(slug=slug).delete()
     return redirect('profile')
+
+@login_required
+def create_token(request):
+    token = Token.objects.create(user=request.user)
+    API_token.object.create(user=request.user, token=token)
+    print(token)
+    return redirect('profile')
+
+# API realization
+@api_view(['GET', 'POST'])
+@authentication_classes([TokenAuthentication, BasicAuthentication])
+@permission_classes([IsAuthenticated])
+def links_api(request):
+    if request.method == 'GET':
+        links = Links.objects.filter(user=request.user)
+        serializer = LinksSerializer(links, many=True)
+        return JsonResponse({'links' : serializer.data})
+
+    if request.method == 'POST':
+        serializer = LinksSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+@api_view(['GET', 'PUT', 'DELETE'])
+def detail_links_api(request, slug):
+    try:
+        link = LinksSerializer(pk=slug)
+    except Links.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializer = LinksSerializer(link)
+        return Response(serializer.data)
+    elif request.method == 'PUT':
+        LinksSerializer(data=request.data)
+
+    elif request.method == 'DELETE':
+        pass
