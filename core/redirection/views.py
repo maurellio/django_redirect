@@ -118,7 +118,10 @@ def detail_links_api(request, slug):
         serializer = LinksSerializer(link)
         return Response(serializer.data)
     elif request.method == 'PUT':
-        LinksSerializer(data=request.data)
-
+        serializer = LinksSerializer(link, data=request.data)
+        if serializer.is_valid():
+            serializer.update(link)
+            return Response(serializer.data)
     elif request.method == 'DELETE':
-        pass
+        link.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
