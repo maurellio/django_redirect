@@ -9,6 +9,8 @@ It's a small web app that provides link shortener service.
 <br>+ Create links
 <br>+ Delete links
 <br>+ Get the information about ammount of clicks per link
+<br>+ DRF API for create / get / update links
+<br>+ Slugger based API documentation
 
 <h3>How to run</h3>
 1. Change the host in file "django_redirect/core/redirection/models.py"
