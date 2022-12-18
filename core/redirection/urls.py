@@ -24,7 +24,7 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout'),
     path('profile/', views.profile, name='profile'),
     path('profile/create/', views.create_link, name='create'),
-    path('profile/gettoken/', views.create_token),
+    path('profile/gettoken/', views.create_token, name='token'),
     path('api/v1/swagger/schema/', schema_view.with_ui('swagger', cache_timeout=0), name='swagger-schema'),
     path('api/v1/links/', views.links_api),
     path('api/v1/links/<str:slug>', views.detail_links_api)

@@ -4,6 +4,16 @@
 
 {% block content %}
 
+
+<div class="container col-md-6 row mx-auto" style="position: absolute; left: 0; right: 0;margin: 100px">
+    <label for="inputPassword" class="col-sm-2 col-form-label">API Token</label>
+    <div class="col-md-6">
+      <input type="text" class="form-control" id="inputPassword" value="{{ token }}">
+    </div>
+    <a class="btn btn-warning mb-2"  style="width: 75px; text-align:left;" href="{% url 'token' %}">Generate</a>
+
+  </div>
+
 <div class="container row mx-auto" style="position: absolute; left: 0; right: 0;margin: 200px">
     {% for link in links %}
     <div class="col-md-6 container mb-3 overflow-auto" style="high: 80px; border-radius: 5px; border: 1px solid #000;">

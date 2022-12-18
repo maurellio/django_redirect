@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils.text import slugify
 from time import time
-from rest_framework.authtoken.models import Token
 
 host_url = 'http://127.0.0.1:8000/'
 

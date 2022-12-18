@@ -14,6 +14,8 @@ from django.http import HttpResponseRedirect, JsonResponse
 from django.contrib.auth import logout
 from .serializers import LinksSerializer
 
+from django.core.exceptions import ObjectDoesNotExist
+
 from rest_framework.authtoken.models import Token
 # Create your views here.
 
@@ -57,8 +59,11 @@ def redirector(request, slug):
 @login_required
 def profile(request):
     links = Links.objects.filter(user=request.user)
-
-    return render(request, 'redirection/profile.html', {'links' : links})
+    try:
+        tk = Token.objects.get(user=request.user)
+    except ObjectDoesNotExist:
+        tk = ' '
+    return render(request, 'redirection/profile.html', {'links' : links, 'token' : tk})
 
 @login_required
 def create_link(request):
@@ -86,9 +91,14 @@ def delete_link(request, slug):
 
 @login_required
 def create_token(request):
-    token = Token.objects.create(user=request.user)
-    API_token.object.create(user=request.user, token=token)
-    print(token)
+    try:
+        token = Token.objects.get(user=request.user)
+        token.delete()
+        token = Token.objects.create(user=request.user)
+    except ObjectDoesNotExist:
+        token = Token.objects.create(user=request.user)
+    #API_token.object.create(user=request.user, token=token)
+    #print(token)
     return redirect('profile')
 
 # API realization
